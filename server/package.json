@@ -8,5 +8,13 @@
   },
   "keywords": [],
   "author": "Nana Obeng-Marnu",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.10",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "sequelize": "^6.25.7"
+  }
 }
