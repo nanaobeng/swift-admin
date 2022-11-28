@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const pool = require("../../database/db");
+const pool = require("../database/db");
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
-const jwtGenerator = require("../../utils/jwtGenerator");
-const authorize = require("../../utils/authorize");
-const User = require("../../models/User");
+const jwtGenerator = require("../utils/jwtGenerator");
+const authorize = require("../utils/authorize");
+const User = require("../models/User");
 
 
 exports.createAdmin = async (req, res) => {
