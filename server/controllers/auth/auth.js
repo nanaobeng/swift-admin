@@ -9,7 +9,7 @@ const authorize = require("../utils/authorize");
 const User = require("../models/User");
 
 
-exports.CreateAdmin = async (req, res) => {
+exports.createAdmin = async (req, res) => {
     const { email, password } = req.body;
   
     try {
