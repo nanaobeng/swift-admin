@@ -10,8 +10,12 @@ app.use(express.json());
 const main = async () => {
 const authRoutes = require("./routes/auth");
 const locationRoutes = require("./routes/location");
+const expenseRoutes = require("./routes/expense");
+const expenseCategoryRoutes = require("./routes/expenseCategory");
 app.use(authRoutes);
 app.use(locationRoutes);
+app.use(expenseRoutes);
+app.use(expenseCategoryRoutes);
 
 try {
   await sequelize.authenticate();
