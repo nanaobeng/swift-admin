@@ -7,166 +7,11 @@ const Expense = require("../models/Expense");
 const ExpenseCategory = require("../models/ExpenseCategory");
 
 
-exports.createExpenseCategory = async (req, res) => {
 
-    try {
-      let form = new formidable.IncomingForm();
-      form.parse(req, async (err, fields) => {
-      const { title,type} = fields;
-     
-      const newRequest = await ExpenseCategory.findOne({ where: { title: `${title}` } });
-  
-      if (newRequest) {
-        return res.status(401).json(
-            {
-                success: false,
-                msg : "Expense Category already exists!"
-            }
-            
-            );
-      }
-      const newExpenseCategory = await ExpenseCategory.create({
-        title: title,
-        type: type,
-       
-      });
-  
-    
-      return res.json({ success: true ,
-    msg : "Expense Category Successfully Created"});
-      })
-      
-    
-  
-      
-  
-    
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send( {
-        success: false,
-        msg : "Error occured during creation."
-    });
-    }
-  };
-
-
-  exports.getExpenseCategory = async (req, res) => {
-    try {
-    
-      const { id } = req.params;
-  
-  
-  
-      const category= await ExpenseCategory.findOne({ where: { id: id } });
-  
-      if (category) {
-        return res.status(200).json({success:true,data:category});
-  
-   
-      } else {
-        return res.status(401).json({ success:false,error: `Expense Category not Found!` });
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  
-
-
-  exports.getExpenseCategories = async (req, res) => {
-    try {
-    
-    
-  
-  
-  
-      const categories = await ExpenseCategory.findAll();
-  
-      if (categories) {
-        return res.status(200).json({success:true,data:categories});
-  
-   
-      } else {
-        return res.status(401).json({success:false,error:'No Categories Found'});
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-
-  exports.updateExpenseCategory = async (req, res) => {
-    try {
-    
-  
-    
-  
-      let form = new formidable.IncomingForm();
-      form.parse(req, async (err, fields) => {
-      const { title, type , id} = fields;
-      
-      const category = await ExpenseCategory.findOne({ where: { id: id } });
-      if (!category) {
-        return res.status(401).json({success:false,msg:'Category not found'});
-      }
-      await ExpenseCategory.update(
-        {
-          title : title,
-          type : type
-        },
-        {
-          where: {
-            id: id,
-          },
-        }
-      );
-  
-      res.json({success:true,msg:"Expense Category succesfully updated!"});
-      })
-  
-   
-  
-    
-  
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  
-  
-  
-  exports.deleteExpenseCategory = async (req, res) => {
-    try {
-    
-
-        const { id } = req.body;
-  
-  
-  
-      const category = await ExpenseCategory.findOne({ where: { id: id } });
-  
-      if (category) {
-        await ExpenseCategory.destroy({
-          where: {
-            id: id,
-          },
-        });
-  
-        res.json({success:true,msg:"Expense Category succesfully deleted!"});
-      } else {
-        return res.status(401).json({ success: false ,error: `Expense Category not Found!` });
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  
-
-//   Expenses
 
 
 exports.createExpense = async (req, res) => {
+  
 
     try {
       let form = new formidable.IncomingForm();
@@ -218,8 +63,9 @@ exports.createExpense = async (req, res) => {
   };
 
 
-  exports.getExpense = async (req, res) => {
+  exports.getSingleExpense = async (req, res) => {
     try {
+      
     
       const { id } = req.params;
   
@@ -246,12 +92,33 @@ exports.createExpense = async (req, res) => {
     
     
   
-  
-  
+      let category_map = {}
+      const expense_types = await ExpenseCategory.findAll()
+      expense_types.map((i) => {
+        category_map[i.id] =  [i.title,i.type]
+      })
+
       const expenses = await Expense.findAll();
+      let result = []
   
       if (expenses) {
-        return res.status(200).json({success:true,data:expenses});
+        expenses.map( async (data) =>{
+            result.push({
+                id : data.id,
+                expense_category : category_map[data.category][1],
+                expense_type : category_map[data.category][0],
+                cost : data.cost,
+                description : data.description,
+                title : data.title,
+                month : data.month,
+                year: data.year
+
+            })
+
+
+        })
+     
+        return res.status(200).json({success:true,data:result});
   
    
       } else {
@@ -262,14 +129,35 @@ exports.createExpense = async (req, res) => {
     }
   };
 
-  exports.getExpensesByCategory = async (req, res) => {
+  exports.getExpensesByCategoryType = async (req, res) => {
     try {
     
-      const { category_id } = req.body;
+      const { type } = req.body;
   
   
   
-      const expenses = await Expense.findAll({ where: { category: category_id } });
+      const expenses = await Expense.findAll({ where: { type: type } });
+  
+      if (expenses) {
+        return res.status(200).json({success:true,data:expenses});
+  
+   
+      } else {
+        return res.status(401).json({ success:false,error: `Expenses not Found!` });
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  exports.getExpensesByCategoryTitle = async (req, res) => {
+    try {
+    
+      const { title } = req.body;
+  
+  
+  
+      const expenses = await Expense.findAll({ where: { title: title } });
   
       if (expenses) {
         return res.status(200).json({success:true,data:expenses});
