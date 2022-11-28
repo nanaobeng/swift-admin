@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const {createAccount} = require('../controllers/auth');
-//authorizeentication
 
-router.post("/auth/create/account",createAccount);
+const authorize = require("../utils/authorize");
 
+const {createAdmin} = require('../controllers/auth/auth');
+
+
+router.post("/auth/create/account",createAdmin);
 
 
 module.exports = router;

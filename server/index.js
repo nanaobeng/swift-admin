@@ -8,6 +8,8 @@ app.use(cors());
 app.use(express.json());
 
 const main = async () => {
+const authRoutes = require("./routes/auth");
+app.use(authRoutes);
 
 try {
   await sequelize.authenticate();
@@ -17,6 +19,8 @@ try {
 }
 
 await sequelize.sync({ alter: true });
+
+
 
 const port = process.env.PORT || 8000;
   app.listen(port, () => {

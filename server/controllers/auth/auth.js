@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const pool = require("../db");
+const pool = require("../../database/db");
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
-const jwtGenerator = require("../utils/jwtGenerator");
-const authorize = require("../utils/authorize");
-const User = require("../models/User");
+const jwtGenerator = require("../../utils/jwtGenerator");
+const authorize = require("../../utils/authorize");
+const User = require("../../models/User");
 
 
 exports.createAdmin = async (req, res) => {
-    const { email, password } = req.body;
+    const { firstname, lastname , email, hashed_password } = req.body;
   
     try {
       const user = await User.findOne({ where: { email: `${email}` } });
@@ -20,10 +20,18 @@ exports.createAdmin = async (req, res) => {
       }
   
       const salt = await bcrypt.genSalt(10);
+      console.log('her')
+      console.log(salt)
+
   
-      const bcryptPassword = await bcrypt.hash(password, salt);
+      const bcryptPassword = await bcrypt.hash(hashed_password, salt);
+      console.log(hashed_password)
+      console.log(bcryptPassword)
+      console.log('after')
   
       const newUser = await User.create({
+        firstname : firstname,
+        lastname : lastname,
         email: email,
         password: bcryptPassword,
       });
