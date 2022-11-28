@@ -10,7 +10,7 @@ const User = require("../../models/User");
 
 
 exports.createAdmin = async (req, res) => {
-    const { firstname, lastname , email, hashed_password } = req.body;
+    const { firstname, role , lastname , email, hashed_password } = req.body;
   
     try {
       const user = await User.findOne({ where: { email: `${email}` } });
@@ -20,93 +20,63 @@ exports.createAdmin = async (req, res) => {
       }
   
       const salt = await bcrypt.genSalt(10);
-      console.log('her')
-      console.log(salt)
+   
 
   
       const bcryptPassword = await bcrypt.hash(hashed_password, salt);
-      console.log(hashed_password)
-      console.log(bcryptPassword)
-      console.log('after')
+      
   
       const newUser = await User.create({
         firstname : firstname,
         lastname : lastname,
+        role : role,
         email: email,
-        password: bcryptPassword,
+        hashed_password: bcryptPassword,
       });
   
-      console.log("success");
-      return res.json({ success: newUser  });
+      
+      return res.json({ success: true  });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send({ success: false  });
     }
   };
 
-// exports.login =  async (req,res) => {
-
-//     const { email, password } = req.body;
+  exports.login = async (req, res) => {
+    const { password,email } = req.body;
   
-//     // query = `SELECT * FROM administrators WHERE email ='${email}'`
-//     query = `SELECT * FROM administrators WHERE email = '${email}'`
-
-
-//     try {
-//       const user = await pool.query(query)
+    try {
+    
+      const user = await User.findOne({ where: { email: email } });
      
- 
-//       if (user.rows.length === 0) {
-//         return res.status(401).json({error:"Invalid Credentials"});
-//       }
      
-
-
   
-//       const validPassword = await bcrypt.compare(
-//         password,
-//         user.rows[0].passcode
-//       );
-//       console.log(validPassword)
-     
-//       if (!validPassword) {
-       
-//         return res.status(401).json({error:"Invalid Credentials"});
-//       }
-//       const token = jwt.sign({user_id: user.rows[0].user_id , email:user.rows[0].email}, process.env.jwtSecret)
-//       res.cookie('t',token,{expire: new Date() + 9999})
+      if (!user) {
+        return res.status(401).json({ error: "Invalid Credentials" });
+      }
 
-      
-//       const user_id  = user.rows[0].user_id
-//       const email  = user.rows[0].email
-//       return res.json ({ token, user: {user_id ,email}})
-//     } catch (err) {
-//       console.error(err.message);
-//       return res.status(401).json({
-//         error: "Invalid Credentials"
-//     });
-//     }
-
-
-
-// };
-
-
-// exports.deleteAccount =  async (req,res) => {
-//   try {
-//     const { id } = req.params;
-//     const select = await pool.query("SELECT * FROM administrators WHERE user_id = $1", [
-//       id
-//     ])
-
-//     if (select.rows.length === 0) {
-//       return res.status(401).json(`Account does not exist!`);
-//     }
-//     const deleteAdmin = await pool.query("DELETE FROM administrators WHERE user_id = $1", [
-//       id
-//     ]);
-//     res.json("Account was deleted!");
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// };
+    
+  
+      const validPassword = await bcrypt.compare(password, user.hashed_password);
+  
+  
+      if (!validPassword) {
+        return res.status(401).json({ error: "Invalid Credentials" });
+      }
+      const token = jwt.sign(
+        { user_id: user.id, email: user.email ,role:user.role },
+        process.env.jwtSecret
+      );
+      res.cookie("t", token, { expire: new Date() + 9999 });
+  
+      const user_id = user.id;
+      const role = user.role;
+      return res.json({ token, user: { user_id, role } });
+    } catch (err) {
+      console.error(err.message);
+      return res.status(401).json({
+        error: "Invalid Credentials",
+      });
+    }
+  };
+  

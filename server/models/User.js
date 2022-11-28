@@ -23,12 +23,14 @@ const User =  sequelize.define(
       },
       hashed_password: {
         type: DataTypes.STRING,
+        allowNull: false,
       },
       reset_token: {
         type: DataTypes.STRING,
       },
       status: {
         type: DataTypes.STRING,
+        defaultValue: "inactive",
       },
       role: {
         type: DataTypes.INTEGER,
