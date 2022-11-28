@@ -265,7 +265,7 @@ exports.createExpense = async (req, res) => {
   exports.getExpensesByCategory = async (req, res) => {
     try {
     
-      const { category_id } = req.params;
+      const { category_id } = req.body;
   
   
   
