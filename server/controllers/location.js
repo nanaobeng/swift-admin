@@ -60,11 +60,34 @@ exports.createLocation = async (req, res) => {
       const location = await Location.findOne({ where: { id: id } });
   
       if (location) {
-        return res.status(200).json(location);
+        return res.status(200).json({success:true,data:location});
   
    
       } else {
-        return res.status(401).json({ error: `Location not Found!` });
+        return res.status(401).json({ success:false,error: `Location not Found!` });
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+  
+
+
+  exports.getLocations = async (req, res) => {
+    try {
+    
+    
+  
+  
+  
+      const locations = await Location.findAll();
+  
+      if (locations) {
+        return res.status(200).json({success:true,data:locations});
+  
+   
+      } else {
+        return res.status(401).json({success:false,error:'No Locations Found'});
       }
     } catch (err) {
       console.log(err.message);
