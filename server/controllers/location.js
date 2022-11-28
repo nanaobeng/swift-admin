@@ -93,4 +93,71 @@ exports.createLocation = async (req, res) => {
       console.log(err.message);
     }
   };
+
+
+  exports.updateLocation = async (req, res) => {
+    try {
+    
+  
+    
+  
+      let form = new formidable.IncomingForm();
+      form.parse(req, async (err, fields) => {
+      const { city,region , id} = fields;
+      
+      const location = await Location.findOne({ where: { id: id } });
+      if (!location) {
+        return res.status(401).json({success:false,msg:'Location not found'});
+      }
+      await Location.update(
+        {
+          city : city,
+          region : region
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+  
+      res.json({success:true,msg:"Location succesfully updated!"});
+      })
+  
+   
+  
+    
+  
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+  
+  
+  
+  exports.deleteLocation = async (req, res) => {
+    try {
+    
+
+        const { id } = req.body;
+  
+  
+  
+      const location = await Location.findOne({ where: { id: id } });
+  
+      if (location) {
+        await Location.destroy({
+          where: {
+            id: id,
+          },
+        });
+  
+        res.json({success:true,msg:"Location succesfully deleted!"});
+      } else {
+        return res.status(401).json({ success: false ,error: `Location not Found!` });
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
   
