@@ -48,3 +48,26 @@ exports.createLocation = async (req, res) => {
     });
     }
   };
+
+
+  exports.getLocation = async (req, res) => {
+    try {
+    
+      const { id } = req.params;
+  
+  
+  
+      const location = await Location.findOne({ where: { id: id } });
+  
+      if (location) {
+        return res.status(200).json(location);
+  
+   
+      } else {
+        return res.status(401).json({ error: `Location not Found!` });
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+  
