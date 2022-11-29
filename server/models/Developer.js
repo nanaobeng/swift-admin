@@ -17,6 +17,10 @@ const Developer =  sequelize.define(
         type: DataTypes.STRING,
     
       },
+
+      type: {
+        type: DataTypes.STRING,
+      },
       contract_period: {
         type: DataTypes.STRING,
        
