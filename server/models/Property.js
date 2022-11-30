@@ -9,6 +9,10 @@ const Property =  sequelize.define(
         autoIncrement: true,
         primaryKey: true,
       },
+      title: {
+        type: DataTypes.STRING,
+    
+      },
       developer: {
         type: DataTypes.INTEGER,
         allowNull: false,
