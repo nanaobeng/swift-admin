@@ -24,8 +24,7 @@ exports.getDashboardSummary = async (req, res) => {
 
 
     const pendingInquiries = await Inquiry.findAll({ where: { status: "pending" } });
-    const developers = await Developer.findAll();
-    const properties = await Property.findAll();
+    const properties = await Property.findAll({ where: { status: "available" } });
     let matches= {}
 
 
@@ -100,7 +99,12 @@ exports.getDashboardSummary = async (req, res) => {
 
     })
 
-    
+    return res.status(200).json({success:true,data:{
+        "pending_inquiries" : pendingInquiries.length,
+        "pending_tasks" : pendingTasks,
+        "available_properties" : properties.length,
+        "matching_properties" : matches,
+    }});
 
     } catch (err) {
       console.log(err.message);
