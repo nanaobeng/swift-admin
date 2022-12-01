@@ -111,3 +111,53 @@ exports.getDashboardSummary = async (req, res) => {
     }
   };
   
+
+
+exports.getInquiryAnalysis = async (req, res) => {
+    // stacked column chart 
+    // grouped by location
+    // filtered by rent, sale , price
+try{
+    let result = {}
+    const inquiries = await Inquiry.findAll();
+
+    inquiries.map( async (data) =>{
+
+     
+
+        if(data.location in result){
+
+            result[data.location] = {
+                "rent" : `${data.purchase_type === 'rent' ? ((result[data.location].rent)  + 1 ): (result[data.location].rent)}`,
+                "sale"  :  `${data.purchase_type === 'sale' ? ((result[data.location].sale)  + 1 ) : (result[data.location].sale)}`,
+                "price" : (result[data.location].price) + data.price
+            }
+
+        }
+        else{
+            result[data.location] = {
+                "Rent" : `${data.purchase_type === 'rent' ? 1 : 0}`,
+                "Sale"  :  `${data.purchase_type === 'sale' ? 1 : 0}`,
+                "Price" : data.price
+            }
+        }
+
+
+    })
+
+    return res.status(200).json({success:true,data:result})
+
+
+} catch (err) {
+    console.log(err.message);
+  }
+
+
+
+
+
+
+
+
+
+};
