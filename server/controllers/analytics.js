@@ -161,3 +161,57 @@ try{
 
 
 };
+
+
+exports.getPropertyAnalysis = async (req, res) => {
+    // horizontal stacked column chart 
+    // grouped by location
+    // filtered by property type
+try{
+    let result = {}
+    const properties = await Property.findAll({ where: { status: "available" } });
+
+    properties.map( async (data) =>{
+
+     
+
+        if(data.location in result){
+
+            result[data.location] = {
+                "apartment" : `${data.purchase_type === 'apartment' ? ((result[data.location].apartment)  + 1 ): (result[data.location].apartment)}`,
+                "house"  :  `${data.purchase_type === 'house' ? ((result[data.location].house)  + 1 ) : (result[data.location].house)}`,
+                "commercial"  :  `${data.purchase_type === 'commercial' ? ((result[data.location].commercial)  + 1 ) : (result[data.location].commercial)}`,
+                "landplot"  :  `${data.purchase_type === 'landplot' ? ((result[data.location].landplot)  + 1 ) : (result[data.location].landplot)}`
+               
+            }
+
+        }
+        else{
+            result[data.location] = {
+                "house" : `${data.purchase_type === 'house' ? 1 : 0}`,
+                "apartment"  :  `${data.purchase_type === 'apartment' ? 1 : 0}`,
+                "commercial"  :  `${data.purchase_type === 'commercial' ? 1 : 0}`,
+                "landplot"  :  `${data.purchase_type === 'landplot' ? 1 : 0}`,
+           
+            }
+        }
+
+
+    })
+
+    return res.status(200).json({success:true,data:result})
+
+
+} catch (err) {
+    console.log(err.message);
+  }
+
+
+
+
+
+
+
+
+
+};
