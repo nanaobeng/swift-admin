@@ -12,11 +12,11 @@ exports.createProperty = async (req, res) => {
       let form = new formidable.IncomingForm();
       form.parse(req, async (err, fields) => {
       const { 
-        developer , email , purchase_type , location , property_type , 
+        title , developer , email , purchase_type , location , property_type , 
         visits , rooms , price , remarks , status
       } = fields;
      
-      const newRequest = await Property.findOne({ where: { client: `${client}` } });
+      const newRequest = await Property.findOne({ where: { title: `${title}` } });
   
       if (newRequest) {
         return res.status(401).json(
@@ -29,6 +29,7 @@ exports.createProperty = async (req, res) => {
       }
       const newProperty = await Property.create({
         developer : developer ,
+        title : title ,
          email : email, 
          purchase_type : purchase_type, 
          location: location, 
@@ -114,7 +115,7 @@ exports.createProperty = async (req, res) => {
   
       let form = new formidable.IncomingForm();
       form.parse(req, async (err, fields) => {
-      const { developer , email , purchase_type , location , property_type , 
+      const { title , developer , email , purchase_type , location , property_type , 
         visits , rooms , price , remarks , status,id} = fields;
       
       const property = await Property.findOne({ where: { id: id } });
@@ -124,6 +125,7 @@ exports.createProperty = async (req, res) => {
       await Property.update(
         {
             developer : developer ,
+            title : title,
             email : email, 
             purchase_type : purchase_type, 
             location: location, 
