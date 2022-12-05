@@ -43,11 +43,11 @@ const Inquiry =  sequelize.define(
       },
       lead_agent: {
         type: DataTypes.STRING,
-        allowNull: false,
+        
       },
       properties_visited: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+   
       },
       rooms: {
         type: DataTypes.INTEGER,
@@ -62,11 +62,11 @@ const Inquiry =  sequelize.define(
       },
       contract_signed: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+       
       },
       priority: {
         type: DataTypes.BOOLEAN,
-        defaultValue:false
+  
       },
       remarks: {
         type: DataTypes.TEXT,

@@ -10,14 +10,18 @@ app.use(express.json());
 const main = async () => {
 const authRoutes = require("./routes/auth");
 const locationRoutes = require("./routes/location");
-const expenseRoutes = require("./routes/expense");
-const expenseCategoryRoutes = require("./routes/expenseCategory");
+// const expenseRoutes = require("./routes/expense");
+// const expenseCategoryRoutes = require("./routes/expenseCategory");
 const taskRoutes = require("./routes/task");
+const analyticsRoutes = require("./routes/analytics");
+const initRoutes = require("./routes/init");
 app.use(authRoutes);
 app.use(locationRoutes);
-app.use(expenseRoutes);
-app.use(expenseCategoryRoutes);
+// app.use(expenseRoutes);
+// app.use(expenseCategoryRoutes);
 app.use(taskRoutes);
+app.use(initRoutes);
+app.use(analyticsRoutes);
 
 try {
   await sequelize.authenticate();
