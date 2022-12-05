@@ -8,6 +8,7 @@ require("dotenv").config();
 exports.getDashboardSummary = async (req, res) => {
     try {
     
+        console.log(req.body)
       const { id } = req.body;
 
    
@@ -56,12 +57,13 @@ exports.getDashboardSummary = async (req, res) => {
     }
 
     pendingInquiries.map( async (inquiry) => {
+        let count = 1;
 
 
         properties.map( async (property) => {
 
             if(confirmMatch(inquiry,property)){
-                matches[matches.length + 1] = {
+                matches[count] = {
                     "inquiry" : {
                         "id" : inquiry.id,
                         "client" : inquiry.client,
@@ -87,6 +89,8 @@ exports.getDashboardSummary = async (req, res) => {
 
 
                 }
+
+                count ++;
             }
 
         })
